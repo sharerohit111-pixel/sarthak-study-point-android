@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract Android project
         run: |
-          unzip -q Sarthak_Study_Point_Premium_v2_FIXED.zip -d unpacked
+          unzip -q Sarthak_Android_Project_V20.zip -d unpacked
           test -f unpacked/SarthakStudyPointAndroid/settings.gradle
 
       - name: Build debug APK
