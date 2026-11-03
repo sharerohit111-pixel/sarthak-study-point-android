@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract Android project
         run: |
-          unzip -Sarthak_Study_Point_Testbook_Style_V21.zip -d unpacked
+          unzip -q Sarthak_Study_Point_Testbook_Style_V21.zip -d unpacked
           test -f unpacked/SarthakStudyPointAndroid/settings.gradle
 
       - name: Build debug APK
