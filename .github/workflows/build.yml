@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract Android project
         run: |
-          unzip -q Sarthak_Study_Point_V27_Admin_PDF_Import.zip -d unpacked
+          unzip -q Sarthak_Study_Point_V28_OCR_Auto_AnswerKey.zip -d unpacked
           test -f unpacked/SarthakStudyPointAndroid/settings.gradle
 
       - name: Build debug APK
