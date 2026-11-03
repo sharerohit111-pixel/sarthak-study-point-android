@@ -31,7 +31,7 @@ jobs:
 
       - name: Extract Android project
         run: |
-          unzip -q Sarthak_Study_Point_V23_GDCE_LDCE_Admin.zip -d unpacked
+          unzip -q Sarthak_Study_Point_V26_All_Exams_CBT_Admin_Control.zip -d unpacked
           test -f unpacked/SarthakStudyPointAndroid/settings.gradle
 
       - name: Build debug APK
