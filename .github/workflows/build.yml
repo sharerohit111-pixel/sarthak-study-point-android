@@ -1,48 +1,53 @@
+
 name: Build Sarthak Study Point APK
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          gradle-version: '8.13'
+          channel: stable
 
-      - name: Install Android SDK packages
+      - name: Extract source ZIP
         run: |
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-36" "build-tools;36.0.0"
+          unzip -q Sarthak_Study_Point_Source.zip -d source
+          test -f source/sarthak_study_point/pubspec.yaml
+          test -f source/sarthak_study_point/lib/main.dart
 
-      - name: Extract Android project
+      - name: Create Android project
         run: |
-          unzip -q Sarthak_Study_Point_V31_Android_Project.zip -d unpacked
-          sed -i 's/TextView section=sectionTitle/LinearLayout section=sectionTitle/' unpacked/SarthakStudyPointAndroid/app/src/main/java/com/sarthakstudypoint/app/MainActivity.java
-          sed -i 's/private TextView sectionTitle/private LinearLayout sectionTitle/' unpacked/SarthakStudyPointAndroid/app/src/main/java/com/sarthakstudypoint/app/MainActivity.java
-          test -f unpacked/SarthakStudyPointAndroid/settings.gradle
+          flutter create --platforms=android --org com.sarthakstudypoint --project-name sarthak_study_point app
+          cp source/sarthak_study_point/pubspec.yaml app/pubspec.yaml
+          cp -r source/sarthak_study_point/lib/. app/lib/
 
-      - name: Build debug APK
-        working-directory: unpacked/SarthakStudyPointAndroid
-        run: gradle assembleDebug
+      - name: Get dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: app
+        run: flutter build apk --debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Sarthak-Study-Point-APK
-          path: unpacked/SarthakStudyPointAndroid/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+          path: app/build/app/outputs/flutter-apk/app-debug.apk
+          
