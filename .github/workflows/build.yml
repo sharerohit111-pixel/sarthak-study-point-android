@@ -37,14 +37,15 @@ jobs:
           cp source/sarthak_study_point/pubspec.yaml app/pubspec.yaml
           cp -r source/sarthak_study_point/lib/. app/lib/
           
+      
+
       - name: Install Android SDK 36
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android API 36
         run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
-
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)
+          echo "Using sdkmanager: $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses || true
+          "$SDKMANAGER" "platforms;android-36" "build-tools;36.0.0"
+          
       - name: Set Android compile SDK
         run: |
           sed -i 's/compileSdk = flutter.compileSdkVersion/compileSdk = 36/' app/android/app/build.gradle.kts
